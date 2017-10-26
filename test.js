@@ -1,15 +1,15 @@
-var baseUrl = "http://api.potato.dev:8001",
+var baseUrl = "http://api.winker.dev:8001",
   token = "",
   message = {
     success: {
       type: "success",
-      title: "TOPEZERA!",
-      text: "TUDO FAUSTOP."
+      title: "SUCESSO!",
+      text: "Tudo Certo."
     },
     error: {
       type: "error",
-      title: "DEU RUIM!",
-      text: "Por favor, dedo no cu e gritaria."
+      title: "ERRO!",
+      text: "Erros ocorreram, cheque o console."
     }
   };
 Main = {
@@ -25,10 +25,18 @@ Main = {
   },
 
   submitForm: function(form) {
-    Main.firstCall();
+    Main.firstCall(form);
   },
-  firstCall: function() {
+  firstCall: function(form) {
     console.log(1);
+    serialize = $(form).serializeArray();
+    data =
+      '{ "username": "' +
+      serialize[0].value +
+      '", "password": "' +
+      serialize[1].value +
+      '", "appid": 1298309864872831}';
+
     $.ajax({
       type: "post",
       headers: {
@@ -36,13 +44,8 @@ Main = {
         "Content-Type": "application/json"
       },
       url: baseUrl + "/v1/auth/login",
-      data: JSON.stringify({
-        username: "admin@potato.com.br",
-        password: "123",
-        appid: 1298309864872831
-      }),
+      data: data,
       success: function(data) {
-        console.log(data);
         if (data) {
           Main.sweetAlert(message.success);
           token = data.token;
@@ -67,7 +70,7 @@ Main = {
         "Content-Type": "application/json",
         Authorization: token
       },
-      url: baseUrl + "/test?id=11",
+      url: baseUrl + "/v1/message?id_portal=2057",
       data: {},
       success: function(data) {
         console.log(data);
